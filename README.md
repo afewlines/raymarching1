@@ -1,9 +1,16 @@
 # raymarching renderer
 
-python requirements:
-    -python 3.8
-    -Cython
-    -wxPython
+## environment
+- python 3.8
+    - mac: framework Python build
+    - Cython
+    - wxPython
 
-to build & run: python3.8 setup.py build_ext
-to clean: python3.8 setup.py clean
+should work fine on mac, WSL. unconfirmed on standard windows. untested standard linux.
+
+## usage
+to build & run: `python3.8 setup.py build_ext`
+
+to clean all: `python3.8 setup.py deepclean`
+
+to run after compile: `python3.8 main.py`
