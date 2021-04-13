@@ -44,5 +44,5 @@ setup(cmdclass={'build_ext': build_ext},
       ext_modules=ext_modules, build_dir="build")
 
 
-if __name__ == '__main__' and "clean" not in sys.argv:
-    os.system("python3.8 main.py")
+# if __name__ == '__main__' and "clean" not in sys.argv:
+#     os.system("python3.8 main.py")

@@ -1,4 +1,6 @@
 #include "Computer.h"
+#include <cmath>
+#include <cstring>
 
 using namespace VectorMath;
 

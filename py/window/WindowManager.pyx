@@ -40,7 +40,9 @@ class RenderPanel(wx.Panel):
         self.sync_update = sync_update
         self.w, self.h = parent.size
         self.time = time.time()
-        self.last = 0
+        self.frames = 0
+
+        self.buffered_image = wx.Bitmap.FromBuffer(self.w, self.h, self.shared_buffer.buf)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -52,12 +54,8 @@ class RenderPanel(wx.Panel):
         self.SizeUpdate()
 
     def OnPaint(self, event):
-        # Just draw prepared bitmap
-        struct.pack_into(
-            '<d', self.shared_time.buf[:8], 0,  time.time() - self.time)
+        wx.BufferedPaintDC(self, self.buffered_image)
 
-        wx.BufferedPaintDC(self, wx.Bitmap.FromBuffer(
-            self.w, self.h, self.shared_buffer.buf))
 
     def OnSize(self, event):
         pass
@@ -69,11 +67,28 @@ class RenderPanel(wx.Panel):
         self.timer.Stop()
         self.sync_update[1].acquire()
         try:
-            self.Refresh()
-            self.Update()
+            # el critcal section
+            self.buffered_image = wx.Bitmap.FromBuffer(self.w, self.h, self.shared_buffer.buf)
         finally:
             self.sync_update[0].release()
-        self.timer.Start(1)
+
+            # less than critical section
+            struct.pack_into('<d', self.shared_time.buf[:8], 0,  time.time() - self.time)
+            self.Refresh()
+            self.Update()
+
+            # fps logic
+            t = time.time()
+            if t-self.time > 1:
+                print(self.frames)
+                self.time = t
+                self.frames = 0
+            else:
+                self.frames += 1
+
+        # poor man's threading        
+        self.timer.Start(0)
+
 
     def SizeUpdate(self):
         self.timer.Stop()

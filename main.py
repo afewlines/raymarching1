@@ -13,7 +13,7 @@ def main():
         elif _system == "Darwin":
             _system = "macosx"
         elif _system == "Windows":
-            raise Exception("WINDOWS BUILD PATH NOT ADDED")
+            _system = "win"
 
         g = glob.glob("build/lib.{}*".format(_system))
         if len(g) < 1:
@@ -32,6 +32,7 @@ def main():
         # which takes care of creating window, starting threads
         # etc.
         renderer = RenderManager.RenderManager((1280, 720))
+        # renderer = RenderManager.RenderManager((1920, 1080))
         renderer.start()
 
 
