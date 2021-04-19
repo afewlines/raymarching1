@@ -13,6 +13,17 @@ finally:
 # modules: ComputeWrapper, RenderManager, WindowManager
 # ComputeWrapper compiles all cpp source used to compile
 ext_modules = [
+    Extension("WorldWrapper",
+              ["./c/DataStructures/vec3.cpp",
+               "./c/DataStructures/vec2.cpp",
+               "./c/Objects/RenderableObject.cpp",
+               "./c/Objects/RenderablePrimitives.cpp",
+               "./c/Objects/World.cpp",
+               "./py/world/WorldWrapper.pyx",
+               ],
+              language='c++',
+              extra_compile_args=[]),
+
     Extension("ComputeWrapper",
               ["./c/DataStructures/vec3.cpp",
                "./c/DataStructures/vec2.cpp",
@@ -21,11 +32,14 @@ ext_modules = [
                "./py/compute/ComputeWrapper.pyx",
                ],
               language='c++',
-              extra_compile_args=['-std=c++11']),
+              extra_compile_args=[]),
 
     Extension("RenderManager", ["./py/RenderManager.pyx"]),
 
+    Extension("WorldManager", ["./py/WorldManager.pyx"]),
+
     Extension("WindowManager", ["./py/window/WindowManager.pyx"]),
+
 ]
 
 # process deepclean before setup,

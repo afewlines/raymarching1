@@ -3,6 +3,8 @@
 #include <sstream>
 #include <string>
 
+
+
 namespace VectorMath {
 vec3::vec3( float x, float y, float z ) {
 	this->x = x;
@@ -92,4 +94,22 @@ vec3 operator-( const vec3 &lthat, const float scale ) {
 	out -= scale;
 	return ( out );
 } // +
+
+void vec3::rotate_by_euler( const vec3 rot ) {
+	vec3  hold;
+	float xc = cos( rot.x ), xs = sin( rot.x );
+
+	hold.y = this->y * xc - this->z * xs;
+	hold.z = this->z * xc + this->y * xs;
+
+	float yc = cos( rot.y ), ys = sin( rot.y );
+
+	hold.x	= this->x * yc - hold.z * ys;
+	this->z = hold.z * yc + this->x * ys;
+
+	float zc = cos( rot.z ), zs = sin( rot.z );
+
+	this->x = hold.x * zc - hold.y * zs;
+	this->y = hold.y * zc + hold.x * zs;
+} // vec3::rotate_by_euler
 }

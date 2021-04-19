@@ -12,15 +12,3 @@ cdef extern from "../../c/Compute/Computer.h":
         void update_mod(int n)
 
         int compute_frame(double time)
-
-
-# cdef class ComputeWrapper:
-#     cdef Computer * obj
-#
-#     def __init__(self):
-#         self.cobj = new Computer()
-#         if self.cobj == NULL:
-#             raise MemoryError('Not enough memory.')
-#
-#     def __del__(self):
-#         del self.cobj

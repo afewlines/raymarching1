@@ -2,6 +2,7 @@
 #cython: language_level=3
 
 cimport ComputeWrapper
+cimport WorldWrapper
 
 
 cdef class PyComputer:
@@ -14,10 +15,14 @@ cdef class PyComputer:
         return self.thisptr.compute_frame(time)
 
     cpdef void set_buffer_image(self, char[:] buf):
-        self.thisptr.set_buffer_image( & buf[0])
+        self.thisptr.set_buffer_image(& buf[0])
 
     cpdef void set_vp_size(self, int w, int h):
         self.thisptr.set_vp_size(w, h)
+
+    cpdef void set_world(self, WorldWrapper.PyWorld a):
+        print(type(a))
+        pass
 
     # Attribute access
     @property

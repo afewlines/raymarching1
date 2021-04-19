@@ -27,12 +27,12 @@ def main():
     else:
         # import the library
         import RenderManager
+        import WorldManager
 
         # init the render manager
         # which takes care of creating window, starting threads
         # etc.
         renderer = RenderManager.RenderManager((1280, 720))
-        # renderer = RenderManager.RenderManager((1920, 1080))
         renderer.start()
 
 

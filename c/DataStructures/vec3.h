@@ -22,6 +22,8 @@ class vec3 {
 		std::string to_string();
 		float magnitude();
 		vec3 normalize();
+
+		void rotate_by_euler( const vec3 );
 };
 vec3 operator+( const vec3 &lthat, const vec3 &that );
 vec3 operator+( const vec3 &lthat, const float scale );

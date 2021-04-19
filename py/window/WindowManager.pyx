@@ -23,9 +23,7 @@ class RenderFrame(wx.Frame):
                              wx.RESIZE_BORDER | wx.MAXIMIZE_BOX),
                          size=size)
         self.size = size
-        self.bufsize = size[0] * size[1] * 3
         self.Bind(wx.EVT_CLOSE, self.OnExit)
-        # self.Centre()
 
     def OnExit(self, event):
         wx.Exit()
@@ -36,13 +34,14 @@ class RenderPanel(wx.Panel):
         super(RenderPanel, self).__init__(parent, -1)
         self.shared_buffer = shm_buf
         self.shared_time = shm_time
-        self.buffer_size = parent.bufsize
         self.sync_update = sync_update
         self.w, self.h = parent.size
         self.time = time.time()
         self.frames = 0
 
-        self.buffered_image = wx.Bitmap.FromBuffer(self.w, self.h, self.shared_buffer.buf)
+        self.buffered_image = wx.Bitmap.FromBuffer(self.w,
+                                                   self.h,
+                                                   self.shared_buffer.buf)
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -50,12 +49,10 @@ class RenderPanel(wx.Panel):
 
         self.timer = wx.Timer(self)
         self.Bind(wx.EVT_TIMER, self.OnTimer, self.timer)
-        # control = wx.StaticBitmap(self, -1, wx.Bitmap(1280, 720))
         self.SizeUpdate()
 
     def OnPaint(self, event):
         wx.BufferedPaintDC(self, self.buffered_image)
-
 
     def OnSize(self, event):
         pass
@@ -68,27 +65,29 @@ class RenderPanel(wx.Panel):
         self.sync_update[1].acquire()
         try:
             # el critcal section
-            self.buffered_image = wx.Bitmap.FromBuffer(self.w, self.h, self.shared_buffer.buf)
+            self.buffered_image = wx.Bitmap.FromBuffer(self.w,
+                                                       self.h,
+                                                       self.shared_buffer.buf)
         finally:
             self.sync_update[0].release()
 
             # less than critical section
-            struct.pack_into('<d', self.shared_time.buf[:8], 0,  time.time() - self.time)
+            struct.pack_into(
+                '<d', self.shared_time.buf[:8], 0,  time.time() - self.time)
             self.Refresh()
             self.Update()
 
             # fps logic
             t = time.time()
-            if t-self.time > 1:
+            if t - self.time > 1:
                 print(self.frames)
                 self.time = t
                 self.frames = 0
             else:
                 self.frames += 1
 
-        # poor man's threading        
+        # poor man's threading
         self.timer.Start(0)
-
 
     def SizeUpdate(self):
         self.timer.Stop()
@@ -96,7 +95,7 @@ class RenderPanel(wx.Panel):
 
 
 class WindowManager():
-    def __init__(self, synchros, shm_buf, shm_time, vp_size, buf_size):
+    def __init__(self, synchros, shm_buf, shm_time, vp_size):
         super(WindowManager, self).__init__()
         self.vp_size = vp_size
         self.sync_exit = synchros['exit']
@@ -105,7 +104,6 @@ class WindowManager():
                                                         create=False)
         self.shared_time = shared_memory.SharedMemory(name=shm_time,
                                                       create=False)
-        self.buf_size = buf_size
         self.app = None
         self.frame = None
         self.panel = None
@@ -115,12 +113,12 @@ class WindowManager():
             self.app = RenderApp()
             self.frame = RenderFrame(self.app,
                                      size=self.vp_size,
-                                     title='RENDERY BOY')  # size
+                                     title='RENDERY BOY')
             # the heavy lifter window-side
             self.panel = RenderPanel(self.frame,
                                      self.shared_buffer,
-                                     self.shared_time,
-                                     self.sync_update)  # buffers
+                                     self.shared_time,  # buffers
+                                     self.sync_update)
 
     def start_window(self):
         print("WINDOW start")
