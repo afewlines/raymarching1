@@ -3,11 +3,13 @@
 #include "../DataStructures/Color.h"
 #include "../DataStructures/vec2.h"
 #include "../DataStructures/vec3.h"
+#include "../Objects/World.h"
 #include <string>
 
 class Computer {
 	public:
 		int mod;
+		World *active_world;
 
 		Computer();
 
@@ -20,9 +22,11 @@ class Computer {
 		////////
 
 
+		void set_active_world( World *world ) {}
 		void set_vp_size( int w, int h );
 		void set_buffer_image( char *buf );
 		void update_mod( int n );
+
 
 
 	private:

@@ -1,5 +1,6 @@
 #!python
 #cython: language_level=3
+
 from libcpp.string cimport string
 
 
@@ -39,10 +40,10 @@ cdef extern from "../../c/Objects/RenderablePrimitives.h" namespace "WorldObject
 cdef extern from "../../c/Objects/World.h":
     cdef cppclass World:
         World() except +
-        World(char * ) except +
+        World(char *) except +
 
-        void set_title(char *)
-        RenderableObject * add_object(RenderableObject *)
+        void set_title(char * )
+        RenderableObject * add_object(RenderableObject * )
         void deets()
 
     cdef cppclass WorldManager:
@@ -50,4 +51,28 @@ cdef extern from "../../c/Objects/World.h":
 
         WorldManager() except +
 
-        void select_world(World *)
+        void select_world(World * )
+
+# EXTENSION TYPES
+
+cdef class PyRenderableObject:
+    cdef RenderableObject * ptr_obj
+
+cdef class PyWorld:
+    cdef World * ptr_world
+    cdef void _add_object(self, PyRenderableObject target)
+    # cpdef deets(self)
+
+cdef class PyWorldManager:
+    cdef WorldManager * ptr_wman
+    cdef PyWorld active_world
+    # cpdef void ping(self)
+    cpdef PyWorld get_world(self)
+    cdef void _select_world(self, PyWorld world)
+    # cpdef void select_world(self, world)
+
+cdef class PyPrimitivePlane(PyRenderableObject):
+    cdef PrimitivePlane * ptr_plane
+
+cdef class PyPrimitiveSphere(PyRenderableObject):
+    cdef PrimitiveSphere * ptr_sphere

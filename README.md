@@ -9,7 +9,7 @@
 should work fine on mac, WSL. unconfirmed on standard windows. untested standard linux.
 
 ## usage
-to build & run: `python3.8 setup.py build_ext`
+to build & run: `python3.8 setup.py install`
 
 to clean all: `python3.8 setup.py deepclean`
 

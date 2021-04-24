@@ -1,3 +1,5 @@
 .python-version
 build/
-py/**/*.c*
+dist/
+src/pymarch/**/*.c*
+*egg-info/

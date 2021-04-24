@@ -5,58 +5,77 @@ import shutil
 import sys
 
 try:
-    from setuptools import Extension, setup
+    from setuptools import (Extension, find_namespace_packages, find_packages,
+                            setup)
 finally:
+    from Cython.Build import cythonize
     from Cython.Distutils import build_ext
 
 # define the modules to build
 # modules: ComputeWrapper, RenderManager, WindowManager
 # ComputeWrapper compiles all cpp source used to compile
 ext_modules = [
-    Extension("WorldWrapper",
-              ["./c/DataStructures/vec3.cpp",
-               "./c/DataStructures/vec2.cpp",
-               "./c/Objects/RenderableObject.cpp",
-               "./c/Objects/RenderablePrimitives.cpp",
-               "./c/Objects/World.cpp",
-               "./py/world/WorldWrapper.pyx",
+    Extension("pymarch.world.WorldWrapper",
+              ["./src/c/DataStructures/vec3.cpp",
+               "./src/c/DataStructures/vec2.cpp",
+               "./src/c/Objects/RenderableObject.cpp",
+               "./src/c/Objects/RenderablePrimitives.cpp",
+               "./src/c/Objects/World.cpp",
+               "./src/pymarch/world/WorldWrapper.pyx",
                ],
               language='c++',
-              extra_compile_args=[]),
+              include_dirs=["./src"],
+              ),
 
-    Extension("ComputeWrapper",
-              ["./c/DataStructures/vec3.cpp",
-               "./c/DataStructures/vec2.cpp",
-               "./c/Compute/RayMarchLib.cpp",
-               "./c/Compute/Computer.cpp",
-               "./py/compute/ComputeWrapper.pyx",
+    Extension("pymarch.compute.ComputeWrapper",
+              ["./src/c/DataStructures/vec3.cpp",
+               "./src/c/DataStructures/vec2.cpp",
+               "./src/c/Compute/RayMarchLib.cpp",
+               "./src/c/Compute/Computer.cpp",
+               "./src/pymarch/compute/ComputeWrapper.pyx",
                ],
               language='c++',
-              extra_compile_args=[]),
+              include_dirs=["./src"],
+              ),
 
-    Extension("RenderManager", ["./py/RenderManager.pyx"]),
+    Extension("pymarch.RenderManager", ["./src/pymarch/RenderManager.pyx"],),
 
-    Extension("WorldManager", ["./py/WorldManager.pyx"]),
+    Extension("pymarch.WorldManager", ["./src/pymarch/WorldManager.pyx"],),
 
-    Extension("WindowManager", ["./py/window/WindowManager.pyx"]),
-
+    Extension("pymarch.WindowManager", ["./src/pymarch/WindowManager.pyx"],),
 ]
 
 # process deepclean before setup,
 # allows to finish with call to normal clean
 if "deepclean" in sys.argv:
-    for i in glob.glob("./build/**"):
+    for i in glob.glob("./build/"):
         shutil.rmtree(i)
 
-    for i in glob.glob("./py/**/*.c*", recursive=True):
+    for i in glob.glob("./dist/"):
+        shutil.rmtree(i)
+
+    for i in glob.glob("./src/*egg-info/"):
+        shutil.rmtree(i)
+
+    for i in glob.glob("./src/pymarch/**/*.c*", recursive=True):
         os.remove(i)
 
     # continue on to normal clean
     sys.argv[1] = "clean"
+    sys.exit(0)
 
-setup(cmdclass={'build_ext': build_ext},
-      ext_modules=ext_modules, build_dir="build")
-
-
-# if __name__ == '__main__' and "clean" not in sys.argv:
-#     os.system("python3.8 main.py")
+ext_modules = cythonize(ext_modules, include_path=["./src"])
+packages = find_packages(where="./src")
+package_data = {name: ['*.pxd', '*.pyx'] for name in packages}
+# print(ext_modules)
+# print(packages)
+# print(package_data)
+# input()
+setup(name="python-raymarching",
+      author="brad, seeker",
+      ext_modules=ext_modules,
+      packages=packages,
+      package_dir={"": "./src"},
+      package_data=package_data,
+      zip_safe=False,
+      )
