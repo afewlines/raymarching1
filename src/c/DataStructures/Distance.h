@@ -4,7 +4,8 @@
 
 typedef struct dresult {
   float d;
-  WorldObjects::RenderableObject closest;
+  WorldObjects::RenderableObject *closest_obj;
+  COLOR *closest_color;
 } DISTRESULT;
 
 #endif

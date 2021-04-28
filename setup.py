@@ -11,6 +11,10 @@ finally:
     from Cython.Build import cythonize
     from Cython.Distutils import build_ext
 
+compile_args = ['-O2']
+link_args = []
+
+
 # define the modules to build
 # modules: ComputeWrapper, RenderManager, WindowManager
 # ComputeWrapper compiles all cpp source used to compile
@@ -20,11 +24,15 @@ ext_modules = [
                "./src/c/DataStructures/vec2.cpp",
                "./src/c/Objects/RenderableObject.cpp",
                "./src/c/Objects/RenderablePrimitives.cpp",
+               "./src/c/Objects/ControlObject.cpp",
+               "./src/c/Objects/Cameras.cpp",
                "./src/c/Objects/World.cpp",
                "./src/pymarch/world/WorldWrapper.pyx",
                ],
               language='c++',
               include_dirs=["./src"],
+              extra_compile_args=compile_args,
+              extra_link_args=link_args,
               ),
 
     Extension("pymarch.compute.ComputeWrapper",
@@ -32,10 +40,14 @@ ext_modules = [
                "./src/c/DataStructures/vec2.cpp",
                "./src/c/Compute/RayMarchLib.cpp",
                "./src/c/Compute/Computer.cpp",
+               "./src/c/Objects/World.cpp",
+               "./src/c/Objects/Cameras.cpp",
                "./src/pymarch/compute/ComputeWrapper.pyx",
                ],
               language='c++',
               include_dirs=["./src"],
+              extra_compile_args=compile_args,
+              extra_link_args=link_args,
               ),
 
     Extension("pymarch.RenderManager", ["./src/pymarch/RenderManager.pyx"],),
@@ -56,6 +68,10 @@ if "deepclean" in sys.argv:
 
     for i in glob.glob("./src/*egg-info/"):
         shutil.rmtree(i)
+
+    # for i in glob.glob("./**/__pycache__*", recursive=True):
+    #     input(i)
+    #     os.remove(i)
 
     for i in glob.glob("./src/pymarch/**/*.c*", recursive=True):
         os.remove(i)

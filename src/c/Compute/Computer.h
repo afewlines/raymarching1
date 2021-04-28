@@ -1,6 +1,8 @@
 #ifndef COMPUTER_H
 #define COMPUTER_H
+#include "../Compute/RayMarchLib.h"
 #include "../DataStructures/Color.h"
+#include "../DataStructures/Distance.h"
 #include "../DataStructures/vec2.h"
 #include "../DataStructures/vec3.h"
 #include "../Objects/World.h"
@@ -13,7 +15,8 @@ class Computer {
 
 		Computer();
 
-		int compute_frame( double time );
+		void compute_frame();
+		void compute_frame_bounded( int lox, int hix, int lowy, int hiy );
 
 
 		//// TODO
@@ -21,12 +24,10 @@ class Computer {
 		// void set_active_camera(); ?
 		////////
 
-
 		void set_active_world( World *world ) {}
 		void set_vp_size( int w, int h );
 		void set_buffer_image( char *buf );
 		void update_mod( int n );
-
 
 
 	private:
@@ -37,9 +38,13 @@ class Computer {
 
 		char *buffer_image;
 
-		COLOR colbuf;
+		COLORBUF colbuf;
 
-		void calculate_pixel_color( VectorMath::vec2 *uv );
+		void update_pixel( VectorMath::vec3 camera_pos, int x, int y );
+		void calculate_pixel_color( World *world,
+		    VectorMath::vec3              ray_origin,
+		    COLORBUF                      *color,
+		    VectorMath::vec2              *uv );
 };
 
 #endif

@@ -14,7 +14,7 @@ class PrimitivePlane :public RenderableObject {
 		void get_size( float[] );
 		void set_size( float, float );
 
-		float distance_from( VectorMath::vec3 );
+		float distance_from( VectorMath::vec3 * );
 };
 
 class PrimitiveSphere :public RenderableObject {
@@ -26,7 +26,7 @@ class PrimitiveSphere :public RenderableObject {
 		float get_radius() { return ( this->radius ); }
 		void set_radius( float rad ) { this->radius = rad; }
 
-		float distance_from( VectorMath::vec3 );
+		float distance_from( VectorMath::vec3 * );
 };
 }
 

@@ -23,6 +23,7 @@ class RenderManager():
         self.synchros = {'exit': multiprocessing.Event(),
                          'update': [multiprocessing.Lock(), multiprocessing.Lock()]}
         # tell display to wait for first update
+        self.synchros['update'][0].acquire()
         self.synchros['update'][1].acquire()
 
         # acquire shared memory
@@ -31,7 +32,7 @@ class RenderManager():
                                                   size=self.vp_size[0] * self.vp_size[1] * 3)
         self.shm_time = shared_memory.SharedMemory(name='time',
                                                    create=True,
-                                                   size=8)
+                                                   size=4)
 
         # init managers
         self.window = WindowManager(self.synchros,
@@ -56,17 +57,24 @@ class RenderManager():
         self.computer.set_world(world)  # we are here on this commit
 
         try:
-            while True:
+            while not exit.is_set():
                 update[0].acquire()
-                if exit.is_set():
-                    break
-
-                self.computer.calculate_frame(time.time())
-
-                update[1].release()
+                try:
+                    self.scene.frame = struct.unpack(
+                        '<i', self.shm_time.buf)[0]
+                    if self.scene._render_loop():
+                        self.computer.calculate_frame()
+                    else:
+                        print("RENDER LOOP exit signal")
+                        break  # render loop said close :(
+                except KeyboardInterrupt:
+                    raise
+                finally:
+                    update[1].release()
 
         except KeyboardInterrupt:
             print("COMPUTE terminated")
+            raise
         finally:
             print("COMPUTE exit")
             # shared_buffer.close()
@@ -88,10 +96,17 @@ class RenderManager():
             # call the compute, may move again later :/
             self.compute_handler()
 
-            p_window.join()
         except KeyboardInterrupt:
-            print("APPLICATION TERMINATED")
+            pass
         finally:
+            self.synchros['exit'].set()
+            self.synchros['update'][1].acquire(block=False)
+            self.synchros['update'][1].release()
+            try:
+                p_window.join()
+            except KeyboardInterrupt:
+                pass
+            print("APPLICATION TERMINATED")
             self.shm_buf.close()
             self.shm_time.close()
             self.shm_buf.unlink()

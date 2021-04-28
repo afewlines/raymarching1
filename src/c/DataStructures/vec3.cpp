@@ -53,7 +53,7 @@ std::string vec3::to_string() {
 } // vec3::to_string
 
 float vec3::magnitude() {
-	return ( sqrt( this->x + this->y + this->z ) );
+	return ( sqrt( pow( this->x, 2 ) + pow( this->y, 2 ) + pow( this->z, 2 ) ) );
 }
 
 vec3 vec3::normalize() {
@@ -95,6 +95,28 @@ vec3 operator-( const vec3 &lthat, const float scale ) {
 	return ( out );
 } // +
 
+vec3 operator*( const vec3 &lthat, const float scale ) {
+	vec3 out( lthat );
+
+	out.x *= scale;
+	out.y *= scale;
+	out.z *= scale;
+	return ( out );
+} // vec3::normalize
+
+vec3 operator*( const vec3 &lthat, const vec3 &that ) {
+	vec3 out( lthat );
+
+	out.x *= that.x;
+	out.y *= that.y;
+	out.z *= that.z;
+	return ( out );
+} // *
+
+float dot( const vec3 &v1, const vec3 &v2 ) {
+	return ( ( v1.x * v2.x ) + ( v1.y * v2.y ) + ( v1.z * v2.z ) );
+}
+
 void vec3::rotate_by_euler( const vec3 rot ) {
 	vec3  hold;
 	float xc = cos( rot.x ), xs = sin( rot.x );
@@ -104,7 +126,7 @@ void vec3::rotate_by_euler( const vec3 rot ) {
 
 	float yc = cos( rot.y ), ys = sin( rot.y );
 
-	hold.x	= this->x * yc - hold.z * ys;
+	hold.x  = this->x * yc - hold.z * ys;
 	this->z = hold.z * yc + this->x * ys;
 
 	float zc = cos( rot.z ), zs = sin( rot.z );

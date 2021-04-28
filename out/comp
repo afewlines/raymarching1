@@ -1,0 +1,13 @@
+#!/bin/sh
+
+if [ $# -ne 2 ]; then
+    echo "Usage: comp [extension of ./bin/*] [desired output format extension] "
+    echo "Use 'mp4' instead of '.mp4', etc."
+fi
+
+
+# ffmpeg call wrapper
+# -r is framerate
+# -filter_complex loops and repeats
+#
+ffmpeg -pattern_type glob -i "./bin/*.$1" -r 30 -filter_complex loop=loop=5:size=480:start=1 "out.$2"

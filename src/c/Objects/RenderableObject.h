@@ -13,18 +13,18 @@ class RenderableObject {
 		static int _count;
 
 		int id;
+		COLOR color;
 		VectorMath::vec3 position;
 		VectorMath::vec3 rotation;
-		// COLOR diffuse;
 
 		RenderableObject() { this->id = _count++; }
-		// RenderableObject( int id, ) { this->id = id; }
 
 		// wrapping functions
 		void get_position( float [] );
 		void get_rotation( float [] );
 		void set_position( float, float, float );
 		void set_rotation( float, float, float );
+		void set_color( float, float, float );
 
 
 		// spatial functions
@@ -32,7 +32,7 @@ class RenderableObject {
 
 
 		// dist function
-		virtual float distance_from( VectorMath::vec3 ) { return ( 4096.0 ); }
+		virtual float distance_from( VectorMath::vec3 * ) { return ( 4096.0 ); }
 
 
 		// float get_color_( VectorMath::vec3 );

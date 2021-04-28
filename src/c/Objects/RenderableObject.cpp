@@ -11,25 +11,31 @@ void RenderableObject::get_position( float out[] ) {
 	out[ 0 ] = this->position.x;
 	out[ 1 ] = this->position.y;
 	out[ 2 ] = this->position.z;
-} // get_position
+} // RenderableObject::get_position
 
 void RenderableObject::get_rotation( float out[] ) {
 	out[ 0 ] = this->rotation.x;
 	out[ 1 ] = this->rotation.y;
 	out[ 2 ] = this->rotation.z;
-} // get_rotation
+} // RenderableObject::get_rotation
 
 void RenderableObject::set_position( float x, float y, float z ) {
 	this->position.x = x;
 	this->position.y = y;
 	this->position.z = z;
-} // set_position
+} // RenderableObject::set_position
 
 void RenderableObject::set_rotation( float x, float y, float z ) {
 	this->rotation.x = x;
 	this->rotation.y = y;
 	this->rotation.z = z;
-} // set_rotation
+} // RenderableObject::set_rotation
+
+void RenderableObject::set_color( float r, float g, float b ) {
+	this->color.r = r;
+	this->color.g = g;
+	this->color.b = b;
+} // RenderableObject::set_color
 
 void RenderableObject::translate_point( VectorMath::vec3 *vec ) {
 	vec->rotate_by_euler( this->rotation );
