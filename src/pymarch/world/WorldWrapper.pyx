@@ -165,6 +165,23 @@ cdef class PyPrimitiveSphere(PyRenderableObject):
     def set_radius(self, w):
         self.ptr_sphere.radius = w
 
+cdef class PyPrimitiveBox(PyRenderableObject):
+    def __cinit__(self):
+        if type(self) is PyPrimitiveBox:
+            self.ptr_obj = self.ptr_box = new PrimitiveBox()
+
+    def __dealloc__(self):
+        if type(self) is PyPrimitiveBox:
+            del self.ptr_box
+
+    def get_size(self):
+        cdef float size[3]
+        self.ptr_box.get_size(size)
+        return size
+
+    def set_size(self, x, y, z):
+        self.ptr_box.set_size(x, y, z)
+
 #
 # CONTROL OBJECTS
 cdef class PyCamera(PyControlObject):

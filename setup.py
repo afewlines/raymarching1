@@ -20,7 +20,8 @@ link_args = []
 # ComputeWrapper compiles all cpp source used to compile
 ext_modules = [
     Extension("pymarch.world.WorldWrapper",
-              ["./src/c/DataStructures/vec3.cpp",
+              ["./src/c/DataStructures/VectorMaths.cpp",
+               "./src/c/DataStructures/vec3.cpp",
                "./src/c/DataStructures/vec2.cpp",
                "./src/c/Objects/RenderableObject.cpp",
                "./src/c/Objects/RenderablePrimitives.cpp",
@@ -36,7 +37,8 @@ ext_modules = [
               ),
 
     Extension("pymarch.compute.ComputeWrapper",
-              ["./src/c/DataStructures/vec3.cpp",
+              ["./src/c/DataStructures/VectorMaths.cpp",
+               "./src/c/DataStructures/vec3.cpp",
                "./src/c/DataStructures/vec2.cpp",
                "./src/c/Compute/RayMarchLib.cpp",
                "./src/c/Compute/Computer.cpp",

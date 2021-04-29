@@ -42,8 +42,7 @@ void Computer::calculate_pixel_color( World *world, vec3 ray_origin, COLORBUF *c
 		col_out->b = 0;
 		return;
 	} else {
-		// float light = ( get_light_diffuse( world, ray_origin ) ) * 255.0f * depth;
-		float light = ( get_light_diffuse( world, ray_origin ) ) * 255.0f * ( 1.0f - depth );
+		float light = get_light_diffuse( world, ray_origin ) * 255.0f * ( 1.0f - depth );
 		col_out->r = (unsigned char)( int (dist.closest_color->r * light) );
 		col_out->g = (unsigned char)( int (dist.closest_color->g * light) );
 		col_out->b = (unsigned char)( int (dist.closest_color->b * light) );

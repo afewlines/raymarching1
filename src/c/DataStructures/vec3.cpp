@@ -53,7 +53,7 @@ std::string vec3::to_string() {
 } // vec3::to_string
 
 float vec3::magnitude() {
-	return ( sqrt( pow( this->x, 2 ) + pow( this->y, 2 ) + pow( this->z, 2 ) ) );
+	return ( sqrt( pow( this->x, 2.0f ) + pow( this->y, 2.0f ) + pow( this->z, 2.0f ) ) );
 }
 
 vec3 vec3::normalize() {
@@ -117,8 +117,39 @@ float dot( const vec3 &v1, const vec3 &v2 ) {
 	return ( ( v1.x * v2.x ) + ( v1.y * v2.y ) + ( v1.z * v2.z ) );
 }
 
+vec3 vecabs( const vec3 &vec ) {
+	vec3 out( vec );
+
+	out.x = abs( vec.x );
+	out.y = abs( vec.y );
+	out.z = abs( vec.z );
+
+	return ( out );
+} // abs
+
+vec3 min( const vec3 &vec, float min_val ) {
+	vec3 out( vec );
+
+	out.x = min( vec.x, min_val );
+	out.y = min( vec.y, min_val );
+	out.z = min( vec.z, min_val );
+
+	return ( out );
+} // min
+
+vec3 max( const vec3 &vec, float max_val ) {
+	vec3 out( vec );
+
+	out.x = max( vec.x, max_val );
+	out.y = max( vec.y, max_val );
+	out.z = max( vec.z, max_val );
+
+	return ( out );
+} // max
+
 void vec3::rotate_by_euler( const vec3 rot ) {
 	vec3  hold;
+
 	float xc = cos( rot.x ), xs = sin( rot.x );
 
 	hold.y = this->y * xc - this->z * xs;

@@ -8,7 +8,7 @@ from multiprocessing import shared_memory
 
 from pymarch.compute.ComputeWrapper import PyComputer
 from pymarch.WindowManager import WindowManager
-from pymarch.WorldManager import DemoScene
+from pymarch.WorldManager import SceneDemo
 
 # from PyWrappers import ComputeWrapper, WindowManager, WorldManager
 
@@ -17,7 +17,7 @@ class RenderManager():
     def __init__(self, size):
         # viewport size in pixels
         self.vp_size = size
-        self.scene = DemoScene()
+        self.scene = SceneDemo()
 
         # exit alert, render loop locks
         self.synchros = {'exit': multiprocessing.Event(),

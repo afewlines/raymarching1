@@ -28,6 +28,18 @@ class PrimitiveSphere :public RenderableObject {
 
 		float distance_from( VectorMath::vec3 * );
 };
+
+class PrimitiveBox :public RenderableObject {
+	public:
+		VectorMath::vec3 size;
+
+		PrimitiveBox() { size.x = 0.0f;size.y = 0.0f;size.z = 0.0f; }
+
+		void get_size( float[] );
+		void set_size( float, float, float );
+
+		float distance_from( VectorMath::vec3 * );
+};
 }
 
 

@@ -55,6 +55,14 @@ cdef extern from "../../c/Objects/RenderablePrimitives.h" namespace "WorldObject
         float get_radius()
         void set_radius(float)
 
+    cdef cppclass PrimitiveBox(RenderableObject):
+        PrimitiveBox() except +
+
+        # modifiable properties
+        void get_size(float[])
+        void set_size(float, float, float)
+
+
 cdef extern from "../../c/Objects/Cameras.h" namespace "WorldObjects":
     cdef cppclass Camera(ControlObject):
         float zoom
@@ -107,6 +115,9 @@ cdef class PyPrimitivePlane(PyRenderableObject):
 
 cdef class PyPrimitiveSphere(PyRenderableObject):
     cdef PrimitiveSphere * ptr_sphere
+
+cdef class PyPrimitiveBox(PyRenderableObject):
+    cdef PrimitiveBox * ptr_box
 
 cdef class PyCamera(PyControlObject):
     cdef Camera * ptr_camera

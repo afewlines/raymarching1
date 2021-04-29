@@ -10,4 +10,4 @@ fi
 # -r is framerate
 # -filter_complex loops and repeats
 #
-ffmpeg -pattern_type glob -i "./bin/*.$1" -r 30 -filter_complex loop=loop=5:size=480:start=1 "out.$2"
+ffmpeg -pattern_type glob -i "./bin/*.$1" -r 60 -filter_complex loop=loop=2:size=480:start=1 "out.$2"

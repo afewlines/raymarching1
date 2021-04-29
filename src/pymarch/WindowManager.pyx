@@ -47,7 +47,7 @@ class RenderPanel(wx.Panel):
         self.total_frames = 0
 
         self.current_image = -1
-        self.buffered_images = []
+        self.buffered_images = [None]
 
         self.Bind(wx.EVT_PAINT, self.OnPaint)
         self.Bind(wx.EVT_SIZE, self.OnSize)
@@ -59,7 +59,7 @@ class RenderPanel(wx.Panel):
         self.timer.Start(1)
 
     def OnPaint(self, event):
-        if len(self.buffered_images) > 0:
+        if self.total_frames > 0:
             wx.BufferedPaintDC(self, self.buffered_images[self.current_image])
 
     def OnSize(self, event):
@@ -75,7 +75,9 @@ class RenderPanel(wx.Panel):
         #
         # handle exit/display
         if self.sync_exit.is_set():
-            self.current_image = (self.current_image + 1) % self.total_frames
+            return
+            self.current_image = self.current_image % (self.total_frames - 1)
+            self.current_image += 1
 
             # fps logic
             # print("{:.2f}".format(t - self.time))
@@ -97,11 +99,11 @@ class RenderPanel(wx.Panel):
             self.sync_update[1].acquire()
 
             # el critcal section
-            self.buffered_images.append(wx.Bitmap.FromBuffer(
+            self.buffered_images[0] = wx.Bitmap.FromBuffer(
                 self.w,
                 self.h,
                 self.shared_buffer.buf,
-            ))
+            )
             self.total_frames += 1
             struct.pack_into(
                 '<i', self.shared_time.buf[:4], 0, self.total_frames)
@@ -110,7 +112,7 @@ class RenderPanel(wx.Panel):
             # less than critical section
             self.Refresh()
             self.Update()
-            self.buffered_images[-1].SaveFile(
+            self.buffered_images[0].SaveFile(
                 "./out/bin/frame{:05}.bmp".format(self.total_frames - 1),
                 wx.BITMAP_TYPE_BMP,
             )

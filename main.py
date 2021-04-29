@@ -32,8 +32,8 @@ def main():
         # etc.
         # ______________________________________________________
         # renderer = RenderManager((1920, 1080))
-        renderer = RenderManager((1280, 720))
-        # renderer = RenderManager((640, 480))
+        # renderer = RenderManager((1280, 720))
+        renderer = RenderManager((640, 480))
         # renderer = RenderManager((512, 512))
         # renderer = RenderManager((256, 256))  # tiny window gang
         renderer.start()

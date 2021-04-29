@@ -1,5 +1,6 @@
 #ifndef VECTOR3_H
 #define VECTOR3_H
+#include "VectorMaths.h"
 #include <cstdint>
 #include <string>
 
@@ -35,6 +36,9 @@ vec3 operator-( const vec3 &lthat, const float scale );
 vec3 operator*( const vec3 &lthat, const vec3 &that );
 vec3 operator*( const vec3 &lthat, const float scale );
 float dot( const vec3 &v1, const vec3 &v2 );
+vec3 vecabs( const vec3 &vec );
+vec3 min( const vec3 &vec, float min );
+vec3 max( const vec3 &vec, float min );
 }
 
 #endif
